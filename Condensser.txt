@@ -1,0 +1,33 @@
+////////////////////////////////////////////////...Condenser...//////////////////////////////////////////	
+  	double mcw=9650; //ton/hour
+  	double Cpcw=4.1797; //kJ/kg.K
+  	double Tcwout=42.62;
+  	double Tcwin=32.84;
+  	double DeltaTcw=(Tcwout-Tcwin); //C
+  	
+  	double m4=0; //Condenser Outlet
+  	double Ethac=(-0.373*PerL*PerL*PerL+111.17*PerL*PerL-3470.7*PerL+442226)/1000000;
+  
+	double Qout=Ethac*mcw*Cpcw*DeltaTcw;
+	//cout << "Heat Disipated By the Cooling System = " << Qout/3.6/1000/Ethac<<"  MW"<< endl;
+	
+
+	
+	////////////////////////////////////////////////...Boiler Inputs ...//////////////////////////////////////////
+	
+	double QBinf=Qin*(Hin-Enthalpy1stHP);
+	double QBina=QBinf/Ethab/3600;
+	
+	double EffCycle=PowerGen/1000/QBina;
+
+
+	
+	//cout <<"\n-----------------------\n";
+	//cout << "Boiler Heat Input = " << QBina<<"  MW"<< endl;
+	//cout << "Power Generated = " << PowerGen/1000 <<"  MW"<< endl;
+	//cout << "Cycle Efficiency = " << EffCycle*100<<" %"<< endl;
+	//cout << "Natural Gas Consumption = " << Qngt<<" Nm3/hr"<< endl;
+	
+	double Qcond=FlowCond*(hf[8]-hf[9]);
+	double deltaTct=Qcond/9650/4.179*1.2;
+	//cout << "Delta T Cooling Water = " << deltaTct<<" C"<< endl;
