@@ -1,0 +1,268 @@
+
+///.............................................................Boiler....................................................................///
+
+	/////////////////////////...fuel composition...///////////////////////////
+	//Natural Gas Composition (Volume Fraction):
+	double H2N=0;
+	double CH4N=84;
+	double C2H6N=5.35;
+	double C3H8N=1.65;
+	double C4H10N=0.3;
+	double C5H12N=0.1;
+	double CON=0.28;
+	double CO2N=8;
+	double O2N=0;
+	double N2N=0.32;
+	double H2ON=0;
+	double NGHHV=40455; //kJ/kg
+	double NGHHVV=35564; //kJ/Nm3
+	double SumN=H2N+CH4N+C2H6N+C3H8N+C4H10N+C5H12N+CON+CO2N+O2N+N2N+H2ON;
+	double NGEAR=5;
+//	cout<<SumN;
+	//Coke Oven Gas Composition (Volume Fraction):
+	double H2c=56;
+	double CH4c=18.8;
+	double C2H6c=1.8;
+	double C3H8c=0;
+	double C4H10c=0;
+	double C5H12c=0;
+	double COc=6;
+	double CO2c=8.6;
+	double O2c=0.3;
+	double N2c=8.5;
+	double H2Oc=0;
+	double COGHHV=26134; //kJ/kg
+	double COGHHVV=14700; //kJ/Nm3
+	double Sumc=H2c+CH4c+C2H6c+C3H8c+C4H10c+C5H12c+COc+CO2c+O2c+N2c+H2Oc;
+	double COGEAR=7;
+//	cout<<Sumc;
+	//Blast Furnace Gas Composition (Volume Fraction):
+	double H2b=6.5;
+	double CH4b=0.3;
+	double C2H6b=0;
+	double C3H8b=0;
+	double C4H10b=0;
+	double C5H12b=0;
+	double COb=24;
+	double CO2b=17.6;
+	double O2b=0.2;
+	double N2b=51.4;
+	double H2Ob=0;
+	double BFGHHV=2961.85; //kJ/kg
+	double BFGHHVV=3845; //kJ/Nm3
+	double Sumb=H2b+CH4b+C2H6b+C3H8b+C4H10b+C5H12b+COb+CO2b+O2b+N2b+H2Ob;
+	double BFEAR=10;
+//	cout<<Sumb;
+
+	////////////////////////...Molar Mass...////////////////////////
+	double MN=14;
+	double MO=16;
+	double MC=12;
+	double MH=1;
+	double Ma=28.84;
+	double MMf=0;
+
+	double MMCH4=MC+4*MH;
+	double MMC2H6=2*MC+4*MH;
+	double MMC3H8=3*MC+8*MH;
+	double MMC4H10=4*MC+10*MH;
+	double MMC5H12=5*MC+12*MH;
+	double MMH2=2*MH;
+	double MMCO=MC+MO;
+	double MMCO2=MC+2*MO;
+	double MMN2=2*MN;
+	double MMH2O=2*MH+MO;
+	
+	double MMNG=(H2N*MMH2+CH4N*MMCH4+C2H6N*MMC2H6+C3H8N*MMC3H8+C4H10N*MMC4H10+C5H12N*MMC5H12+CON*MMCO+CO2N*MMCO2+N2N*MMN2+H2ON*MMH2O)/100;
+	//cout<<"Molar Mass of NG="<<MMNG<<" gr/mole";
+	double MMCOG=(H2c*MMH2+CH4c*MMCH4+C2H6c*MMC2H6+C3H8c*MMC3H8+C4H10c*MMC4H10+C5H12c*MMC5H12+COc*MMCO+CO2c*MMCO2+N2c*MMN2+H2Oc*MMH2O)/100;
+	//cout<<"Molar Mass of COG="<<MMCOG<<" gr/mole";
+	double MMBFG=(H2b*MMH2+CH4b*MMCH4+C2H6b*MMC2H6+C3H8b*MMC3H8+C4H10b*MMC4H10+C5H12b*MMC5H12+COb*MMCO+CO2b*MMCO2+N2b*MMN2+H2Ob*MMH2O)/100;
+	//cout<<"Molar Mass of BFGG="<<MMBFG<<" gr/mole";
+	
+	//Combined Fuel:
+	double Tg=0;
+	double Ta=0;
+	double Phi1, Phi;
+	Phi1=0;
+
+	cout<<"Please Enter Ambient Air Temperature (C):";
+	cin>>Ta;
+	cout<<"Please Enter Relative Humidity (0-100):";
+	cin>>Phi1;
+	if (Phi1>100 || Phi1<0){
+		cout<<"Please Choose a Number Between 0-100:";
+		cin>>Phi1;
+	}
+
+	cout<<"\nPlease Enter Flue Gas Temperature (C):";
+	cin>>Tg;
+	Phi=Phi1/100;
+	double NGSp=0, COGSp=0, BFGSp=0;
+	cout<<"Please Enter share of N.G, C.O.G and B.F.G from Generated Power (Sum must be 100):";
+	cout<<"\nNatural Gas Share of Boiler's Power is (0-100):";
+	cin>>NGSp;
+	cout<<"Cock Oven Gas Share of Boiler's Power is (0-100):";
+	cin>>COGSp;
+	cout<<"Blast Furnace Gas Share of Boiler's Power is (0-100):";
+	cin>>BFGSp;
+
+	//NGSp=50; COGSp=25; BFGSp=25;	
+	double BTP=100000; //Boiler's Total Power (kwh)
+	double BTPJ=BTP*3600; // Boiler's Total Power (kJ)
+	double NGv=NGSp/100*BTPJ/NGHHVV; //Nm3
+	double COGv=COGSp/100*BTPJ/COGHHVV; //Nm3
+	double BFGv=BFGSp/100*BTPJ/BFGHHVV; //Nm3
+	double totalv=NGv+COGv+BFGv; //Nm3
+	double NGS1=0, COGS1=0, BFGS1=0;
+	NGS1=NGv/totalv;
+	COGS1=COGv/totalv;
+	BFGS1=BFGv/totalv;
+	double FuelMole=totalv/22.414;
+	
+	double NGS=NGS1, COGS=COGS1, BFGS=BFGS1;
+	int NGSi=NGS*100, BFGSi=BFGS*100, COGSi=COGS*100;
+	cout<<"\nVolume Fraction of NG="<<NGSi<<" Nm3/100 Nm3 of Fuel"<<"\nVolume Fraction of COG="<<COGSi<<" Nm3/100 Nm3 of Fuel"<<"\nVolume Fraction of BFG="<<BFGSi<<" Nm3/100 Nm3 of Fuel";
+	double EAR=NGS*NGEAR+COGS*COGEAR+BFGS*BFEAR; //Minimum Required Excess Air
+	double H2=NGS*H2N+COGS*H2c+H2b*BFGS; //Mole of H2 in Fuel
+	double CH4=NGS*CH4N+COGS*CH4c+CH4b*BFGS;
+	double C2H6=NGS*C2H6N+COGS*C2H6c+C2H6b*BFGS;
+	double C3H8=NGS*C3H8N+COGS*C3H8c+C3H8b*BFGS;
+	double C4H10=NGS*C4H10N+COGS*C4H10c+C4H10b*BFGS;
+	double C5H12=NGS*C5H12N+COGS*C5H12c+C5H12b*BFGS;
+	double CO=NGS*CON+COGS*COc+COb*BFGS;
+	double CO2=NGS*CO2N+COGS*CO2c+CO2b*BFGS;
+	double O2=NGS*O2N+COGS*O2c+O2b*BFGS;
+	double N2=NGS*N2N+COGS*N2c+N2b*BFGS;
+	double H2O=NGS*H2ON+COGS*H2Oc+H2Ob*BFGS;
+	double FuelHHV=NGS*NGHHVV+COGS*COGHHVV+BFGS*BFGHHVV; //kJ/Nm3
+	double Sum=H2+CH4+C2H6+C3H8+C4H10+C5H12+CO+CO2+O2+N2+H2O;
+	//cout<<Sum;
+	
+	MMf=(H2*2*MH+CH4*MC+CH4*4*MH+C2H6*2*MC+C2H6*6*MH+C3H8*3*MC+C3H8*8*MH+C4H10*4*MC+C4H10*10*MH+C5H12*5*MC+C5H12*12*MH+CO*MC+CO*MO+CO2*MC+CO2*2*MO+O2*2*MO+N2*2*MN+H2O*2*MH+H2O*MO)/100;
+	
+	////////////////////////...Equation...////////////////////////
+	double x=0; // CO2 Coefficient
+	double y=0; // H2O Coefficient
+	double z=0; // N2 Coefficient
+	double z1=0; // N Coefficient in Lefthand Side
+	double t1=0; // H2O Coefficient in Lefthand Side
+	double w=0; // O2 Coefficient
+	double v=0; // CO Coefficient
+	double w1=0; // O Coefficient in lefthand Side
+	double ath=0; //Stoichiometric Air Coefficient
+	double EA1=0; // Excess Air Percent
+
+	
+	//Stoichiometric Equation:
+	w1=CO+2*CO2+2*O2;
+	z1=N2;
+	t1=H2O;
+	x=CH4+2*C2H6+3*C3H8+4*C4H10+5*C5H12+CO+CO2;
+	y=(2*H2+4*CH4+6*C2H6+8*C3H8+10*C4H10+12*C5H12)/2+t1;
+	ath=(2*x+y-w1)/2;
+	z=N2+ath*3.76;
+	cout<<"\n\nStoichiometric Equation:\n"<<H2<<" H2+"<<CH4<<" CH4+"<<C2H6<<" C2H6+"<<C3H8<<" C3H8+"<<C4H10<<" C4H10+"<<C5H12<<" C5H12+"<<CO<<" CO+\n"<<CO2<<" CO2+"<<O2<<" O2+"<<N2<<" N2+"<<t1<<" H2O+"<<ath<<"(O2+3.76 N2) --->\n"<<x<<" CO2+"<<y<<" H2O+"<<z<<" N2";
+	
+	//Excess Air Situation:
+	cout<<"\n\n\nMinimum Excess Air Required is:"<<EAR<<" %";
+	cout<<"\nPlease Enter Excess Air Percentage (0-100):";
+	cin>>EA1;
+	double EA=EA1-EAR;
+	
+	if (EA>=0){
+	z=3.76*(ath*(1+EA/100))+z1;
+	w=EA/100*ath;
+	cout<<"\n\nCombustion Equation:\n"<<H2<<" H2+"<<CH4<<" CH4+"<<C2H6<<" C2H6+"<<C3H8<<" C3H8+"<<C4H10<<" C4H10+"<<C5H12<<" C5H12+"<<CO<<" CO+\n"<<CO2<<" CO2+"<<O2<<" O2+"<<N2<<" N2+"<<t1<<" H2O+"<<(1+EA/100)<<" X "<<ath<<"(O2+3.76 N2) --->\n"<<x<<" CO2+"<<y<<" H2O+"<<z<<" N2+"<<w<<" O2";
+	}
+	
+	if (EA<0){
+	y=(2*H2+4*CH4+6*C2H6+8*C3H8+10*C4H10+12*C5H12)/2;
+	x=2*ath*(1+EA/100)+w1-(CH4+2*C2H6+3*C3H8+4*C4H10+5*C5H12+CO+CO2)-y;
+	v=CH4+2*C2H6+3*C3H8+4*C4H10+5*C5H12+CO+CO2-x;
+	z=3.76*(ath*(1+EA/100))+z1;
+	if (x<0)
+	{x=0;
+	v=CH4+2*C2H6+3*C3H8+4*C4H10+5*C5H12+CO+CO2;}
+	//cout<<"y="<<y<<"\n x="<<x<<"\n v="<<v<<"\n z="<<z<<"\n w="<<w;
+	cout<<"\n\nCombustion Equation:\n"<<H2<<" H2+"<<CH4<<" CH4+"<<C2H6<<" C2H6+"<<C3H8<<" C3H8+"<<C4H10<<" C4H10+"<<C5H12<<" C5H12+"<<CO<<" CO+\n"<<CO2<<" CO2+"<<O2<<" O2+"<<N2<<" N2+"<<t1<<" H2O+"<<(1+EA/100)<<" X "<<ath<<"(O2+3.76 N2) --->\n"<<x<<" CO2+"<<v<<" CO+"<<y<<" H2O+"<<z<<" N2";
+	}
+
+	////////////////////////...Density...////////////////////////
+	double RhoCH4=MMCH4/22.414;
+	double RhoC2H6=MMC2H6/22.414;
+	double RhoC3H8=MMC3H8/22.414;
+	double RhoC4H10=MMC4H10/22.414;
+	double RhoC5H12=MMC5H12/22.414;
+	double RhoCO=MMCO/22.414;
+	double RhoCO2=MMCO2/22.414;
+	double RhoH2=MMH2/22.414;
+	double RhoN2=MMN2/22.414;
+	double RhoH2O=MMH2O/22.414;
+	
+	////////////////////////...Thermal Properties...////////////////////////
+	double HHVV=NGS*NGHHVV+BFGS*BFGHHVV+COGS*COGHHVV; //kJ/kg
+	double HHV=HHVV/MMf*22.414;
+	double Cpfg=1.068;
+	cout<<"\n\n\nMoles of Fuel= "<<FuelMole;
+	cout<<"\nFuel LHV= "<<HHV;
+	cout<<"\nMolar Mass of Fuel="<<MMf;
+	cout<<"\nDensity of Fuel="<<MMf/22.414;
+	////////////////////////...Losses...////////////////////////
+	cout<<"\n\n......Boiler Losses......\n\n";
+	///Stack Losses:
+	cout<<"Stack Losses:";
+	//Dry Gas Loss
+	double Wg=(w*MO*2+z*MN*2+x*(MC+2*MO)+v*(MC+MO))/1000;
+	double DGL=(Wg*(Tg-Ta)*Cpfg*100)/(HHV*MMf*100/1000);
+	double dlge=DGL*(HHV*MMf*100/1000)/4.179;
+	//cout<<"\n  Dry Gas Loss:"<<dlge<<" kJ";
+	cout<<"\n  Dry Gas Loss:"<<DGL<<" %";
+	//Moisture Loss
+	double Hs=2646;
+	double Ha=88;
+	double ML=(9*H2*(2*MH)+H2O*(2*MH+MO))/(MMf*100)*(Hs-Ha)/HHV*100;
+	cout<<"\n  Moisture Loss:"<<ML<<" %";
+	//Humidity Loss
+	double Pg=2;
+	double Pt=84;
+	double wh=0.622*Phi*Pg/(Pt-Phi*Pg);
+	double HL=wh*(1+EA/100)*ath*Ma/1000*4.76*(Hs-Ha)/HHV/(MMf/1000*100)*100;
+	cout<<"\n  Humidity Loss:"<<HL<<" %";
+	//Radiation Loss
+	double RL=(pow(10,-7)*Qin*Qin-6*pow(10,-5)*Qin+0.012)*100;
+	cout<<"\n\n  Radiation Loss:"<<RL<<" %";
+	//Uncountable Loss
+	double UL=0.25;
+	cout<<"\n  Uncountable Loss:"<<UL<<" %";
+	//Manufacturer's Margine
+	double MM=0.25;
+	cout<<"\n  Manufacturer's Margine:"<<MM<<" %";
+	//Incomplete Combustion Loss
+	double ICL=0;
+	double hfd=0;
+	double COF=v/(x+v);
+	//cout<<"\n      COF="<<COF;
+	double CarbonWP=0;
+	double FuelW=CH4*RhoCH4+C2H6*RhoC2H6+C3H8*RhoC3H8+C4H10*RhoC4H10+C5H12*RhoC5H12+CO*RhoCO+CO2*RhoCO2;
+	double CH4WP=CH4*RhoCH4/FuelW;
+	double C2H6WP=C2H6*RhoC2H6/FuelW;
+	double C3H8WP=C3H8*RhoC3H8/FuelW;
+	double C4H10WP=C4H10*RhoC4H10/FuelW;
+	double C5H12WP=C5H12*RhoC5H12/FuelW;
+	double COWP=CO*RhoCO/FuelW;
+	double CO2WP=CO2*RhoCO2/FuelW;
+	//double SumWP=CH4WP+C2H6WP+C3H8WP+C4H10WP+C5H12WP+COWP+CO2WP;
+	//cout<<"\n      Ch4wp="<<CH4WP;
+	CarbonWP=MC/MMCH4*CH4WP+2*MC/MMC2H6*C2H6WP+3*MC/MMC3H8*C3H8WP+4*MC/MMC4H10*C4H10WP+5*MC/MMC5H12*C5H12WP+MC/MMCO*COWP+MC/MMCO2*CO2WP;
+	//cout<<"\n      CarbonWP="<<CarbonWP;
+	hfd=10160*2.326;
+	ICL=COF*CarbonWP*hfd/HHV/(MMf/1000*100)*100;
+	cout<<"\n  Incomplete Combustion Loss:"<<ICL<<" %";
+	/// Sigma Loss
+	double SL=DGL+ML+HL+RL+UL+MM+ICL;
+	cout<<"\n\nSum of Boiler Losses="<<SL<<" %";
+	cout<<"\n\nEfficiency of Boiler="<<100-SL<<" %";
+	double Ethab=100-SL;
+	//cout<<"\n\nHeat Generated= "<<HHV*MMf*FuelMole/3600<<" kWh";
+	
