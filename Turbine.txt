@@ -1,0 +1,157 @@
+///......................................................Turbine..............................................................///
+	//////...Stage 6...///
+	double EthaPoly=Etha;
+	if (PerL<100)
+	EthaPoly=0.0014*Qin+0.55;
+	double ER6=0.0007*Qin+0.6622;
+	double Ps6=Pin*pow(ER6,6);
+	double Cp6=Cp(Tin,Ps6);
+	double Cv6=Cp6-8.3145/18.0153;
+	double k6=Cp6/Cv6;
+	double Ts6=(Tin+273.15)*pow((Ps6/Pin),(k6-1)/k6*EthaPoly)-273.15;
+	double Hs6=Hsup(Ts6,Ps6);
+	double Ss6=Ssup(Ts6,Ps6);
+	double x6=0;
+	if (Ss6>SsatV(Ps6))
+	 x6=1;
+	if (Ss6<SsatV(Ps6)){
+	x6=(Ss6-SsatL(Ps6))/(SsatV(Ps6)-SsatL(Ps6));
+	}
+	//cout<<"----------\nStage6\nPs6="<<Ps6<<"\nTs6="<<Ts6<<"\nHs6="<<Hs6<<"\nSs6="<<Ss6<<"\nX6="<<x6;
+	//////...Stage 8...///
+	Etha=0.855;
+	double ER8=0.8;
+	double Ps8=Ps6*pow(ER8,2);
+	double Cp8=Cp(Ts6,Ps8);
+	double Cv8=Cp8-8.3145/18.0153;
+	double k8=Cp8/Cv8;
+	double Ts8=(Ts6+273.15)*pow((Ps8/Ps6),(k8-1)/k8*Etha)-273.15;
+	double Hs8=Hsup(Ts8,Ps8);
+	double Ss8=1.0*Ss6;
+	double x8=0;
+	if (Ss8>SsatV(Ps8))
+	 x8=1;
+	if (Ss8<SsatV(Ps8)){
+	x8=(Ss8-SsatL(Ps8))/(SsatV(Ps8)-SsatL(Ps8));
+	}
+	//cout<<"\n----------\nStage8\nPs8="<<Ps8<<"\nTs8="<<Ts8<<"\nHs8="<<Hs8<<"\nSs8="<<Ss8<<"\nX8="<<x8;
+	//////...Stage 10...///
+	Etha=0.86;
+	double ER10=0.775;
+	double Ps10=Ps8*pow(ER10,2);
+	double Cp10=Cp(Ts8,Ps10);
+	double Cv10=Cp10-8.3145/18.0153;
+	double k10=Cp10/Cv10;
+	double Ts10=(Ts8+273.15)*pow((Ps10/Ps8),(k10-1)/k10*Etha)-273.15;
+	double Hs10=Hsup(Ts10,Ps10);
+	double Ss10=1.0*Ss8;
+	double x10=0;
+	if (Ss10>SsatV(Ps10))
+	 x10=1;
+	if (Ss10<SsatV(Ps10)){
+	x10=(Ss10-SsatL(Ps10))/(SsatV(Ps10)-SsatL(Ps10));
+	}
+	//cout<<"\n----------\nStage10\nPs10="<<Ps10<<"\nTs10="<<Ts10<<"\nHs10="<<Hs10<<"\nSs10="<<Ss10<<"\nX10="<<x10;
+	//////...Stage 14...///
+	Etha=0.91;
+	double ER14=0.735;
+	double Ps14=Ps10*pow(ER14,4);
+	double Cp14=Cp(Ts10,Ps14);
+	double Cv14=Cp14-8.3145/18.0153;
+	double k14=Cp14/Cv14;
+	double Ts14=(Ts10+273.15)*pow((Ps14/Ps10),(k14-1)/k14*Etha)-273.15;
+	double Hs14=Hsup(Ts14,Ps14);
+	double Ss14=1.0*Ss10;
+	double x14=0;
+	if (Ss14>SsatV(Ps14))
+	 x14=1;
+	if (Ss14<SsatV(Ps14)){
+	x14=(Ss14-SsatL(Ps14))/(SsatV(Ps14)-SsatL(Ps14));
+}
+	//cout<<"\n----------\nStage14\nPs14="<<Ps14<<"\nTs14="<<Ts14<<"\nHs14="<<Hs14<<"\nSs14="<<Ss14<<"\nX14="<<x14;
+	//////...Stage 16...///
+	Etha=0.90;
+	double ER16=0.65;
+	double Ps16=Ps14*pow(ER16,2);
+	double Cp16=Cp(Ts14,Ps16);
+	double Cv16=Cp16-8.3145/18.0153;
+	double k16=Cp16/Cv16;
+	double Ts16=(Ts14+273.15)*pow((Ps16/Ps14),(k16-1)/k16*Etha)-273.15;
+	if (Ts16<Tsat(Ps16))
+	Ts16=Tsat(Ps16);
+	double Hs16=Hsup(Ts16,Ps16);
+	double Ss16=1.0*Ss14;
+	double x16=0;
+	if (Ss16>SsatV(Ps16))
+	 x16=1;
+	if (Ss16<SsatV(Ps16)){
+	x16=(Ss16-SsatL(Ps16))/(SsatV(Ps16)-SsatL(Ps16));
+}
+	if(x16<1)
+	Hs16=x16*(HsatV(Ps16)-HsatL(Ps16))+HsatL(Ps16);
+	//cout<<"\n----------\nStage16\nPs16="<<Ps16<<"\nTs16="<<Ts16<<"\nHs16="<<Hs16<<"\nSs16="<<Ss16<<"\nX16="<<x16;
+	//////...Stage 18...///
+	double ER18=0.56;
+	double Ps18=Ps16*pow(ER18,2);
+	double Cp18=Cp(Ts16,Ps18);
+	double Cv18=Cp18-8.3145/18.0153;
+	double k18=Cp18/Cv18;
+	double Ts18=(Ts16+273.15)*pow((Ps18/Ps16),(k18-1)/k18*Etha)-273.15;
+	double Hs18=Hsup(Ts18,Ps18);
+	if (Ts18<Tsat(Ps18)){
+	Ts18=Tsat(Ps18);
+}
+	double Ss18=1.0*Ss16;
+	double x18=0;
+	if (Ss18>SsatV(Ps18))
+	 x18=1;
+	if (Ss18<SsatV(Ps18)){
+	x18=(Ss18-SsatL(Ps18))/(SsatV(Ps18)-SsatL(Ps18));
+}
+	if(x18<1)
+	Hs18=x18*(HsatV(Ps18)-HsatL(Ps18))+HsatL(Ps18);
+
+	//cout<<"\n----------\nStage18\nPs18="<<Ps18<<"\nTs18="<<Ts18<<"\nHs18="<<Hs18<<"\nSs18="<<Ss18<<"\nX18="<<x18;
+
+	//////...Stage 20...///
+	double ER20=-0.0005*Qin+0.620;
+	double Ps20=Ps18*pow(ER20,2);
+	double Cp20=Cp(Ts18,Ps20);
+	double Cv20=Cp20-8.3145/18.0153;
+	double k20=Cp20/Cv20;
+	double Ts20=(Ts18+273.15)*pow((Ps20/Ps18),(k20-1)/k20*Etha)-273.15;
+	double Hs20=Hsup(Ts20,Ps20);
+	if (Ts20<Tsat(Ps20)){
+	Ts20=Tsat(Ps20);
+}
+	
+	double Ss20, x20;
+	Ss20=1.01*Ss18;
+	x20=(Ss20-SsatL(Ps20))/(SsatV(Ps20)-SsatL(Ps20));
+	if(x20<1)
+	Hs20=x20*(HsatV(Ps20)-HsatL(Ps20))+HsatL(Ps20);
+	//cout<<"\n----------\nStage20\nPs20="<<Ps20<<"\nTs20="<<Ts20<<"\nHs20="<<Hs20<<"\nSs20="<<Ss20<<"\nX20="<<x20;
+
+  
+  ////////////////////////////////////////////////...Turbine Parameters...//////////////////////////////////////////
+	double m1=Qin;
+	double m13=0,m14=0,m15=0,m16=0,m17=0,m18=0;
+
+	////////.... Calculating Extractions Flow Rate....//////////
+	double h[26];
+	for(int i=0; i<26; i++){
+		h[i]=0;
+	}
+	h[13]=Hs6;h[14]=Hs8;h[15]=Hs10;h[16]=Hs14;h[17]=Hs16;h[18]=Hs18;h[3]=Hs20;
+	h[2]=Hin;
+	
+	
+	double m3=m1-m13-m14-m15-m16-m17-m18;
+//	cout<<"\n----------\nFlow Rate of 6th Ex.="<<m18<<"\nFlow Rate of 5th Ex.="<<m17<<"\nFlow Rate of 4th Ex.="<<m16<<"\nFlow Rate of 3rd Ex.="<<m15<<"\nFlow Rate of 2nd Ex.="<<m14<<"\nFlow Rate of 1st Ex.="<<m13;
+
+  ////////////////////////////////////////////////...Pumps...//////////////////////////////////////////
+   double Powercp=190; //kW
+   double Ethacp=0.7;
+   
+   double Powerfp=1600; //kW
+   double Ethafp=0.7;
